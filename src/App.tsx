@@ -1,28 +1,47 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import ToDoList, {TaskType} from "./ToDoList";
 
+export type FilterType = "all" | "active" | "completed";
+
 function App() {
     //BLL:
-    const toDoListTitle_1: string = "What to learn today?";
-    const toDoListTitle_2: string = "What to learn next week?";
-    const tasks_1: Array<TaskType> = [
+
+
+    const toDoListTitle: string = "What to learn today?";
+
+    const [tasks, setTasks] = useState<Array<TaskType>>([
         {id: 1, title: "HTML&CSS", isDone: true},
         {id: 2, title: "JS&TS", isDone: true},
         {id: 3, title: "REACT", isDone: false},
-    ]
+    ])
 
-    const tasks_2: Array<TaskType> = [
-        {id: 1, title: "Algorithm", isDone: true},
-        {id: 2, title: "SaSS", isDone: true},
-        {id: 3, title: "REACT", isDone: false},
-    ]
+    const [filter, setFilter] = useState<FilterType>("all")
+
+
+
+    let tasksForTodolist = tasks;
+    if (filter === "active") {
+        tasksForTodolist = tasks.filter(t => !t.isDone)
+    }
+    if (filter === "completed") {
+        tasksForTodolist = tasks.filter(t => t.isDone)
+    }
+
+    const changeFilter = (filter: FilterType) => {
+        setFilter(filter)
+    }
+
+    const removeTask = (taskID: number) => {
+
+        setTasks(tasks.filter(t => t.id !== taskID));
+    }
+
 
     //UI
     return (
         <div className="App">
-            <ToDoList title={toDoListTitle_1} tasks={tasks_1}/>
-            <ToDoList title={toDoListTitle_2} tasks={tasks_2}/>
+            <ToDoList title={toDoListTitle} tasks={tasksForTodolist} removeTask={removeTask} changeFilter={changeFilter}/>
         </div>
     );
 }
