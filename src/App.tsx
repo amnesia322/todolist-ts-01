@@ -1,49 +1,59 @@
 import React, {useState} from 'react';
 import './App.css';
 import ToDoList, {TaskType} from "./ToDoList";
+import {v1} from "uuid";
 
 export type FilterType = "all" | "active" | "completed";
 
 function App() {
     //BLL:
+    console.log(v1())
 
 
     const toDoListTitle: string = "What to learn today?";
 
     const [tasks, setTasks] = useState<Array<TaskType>>([
-        {id: 1, title: "HTML&CSS", isDone: true},
-        {id: 2, title: "JS&TS", isDone: true},
-        {id: 3, title: "REACT", isDone: false},
+        {id: v1(), title: "HTML&CSS", isDone: true},
+        {id: v1(), title: "JS&TS", isDone: true},
+        {id: v1(), title: "REACT", isDone: false},
     ])
 
     const [filter, setFilter] = useState<FilterType>("all")
-
-
-
-    let tasksForTodolist = tasks;
-    if (filter === "active") {
-        tasksForTodolist = tasks.filter(t => !t.isDone)
-    }
-    if (filter === "completed") {
-        tasksForTodolist = tasks.filter(t => t.isDone)
-    }
 
     const changeFilter = (filter: FilterType) => {
         setFilter(filter)
     }
 
-    const removeTask = (taskID: number) => {
+    const removeTask = (taskID: string) => {
 
         setTasks(tasks.filter(t => t.id !== taskID));
     }
 
+    const addTask = (title: string) => {
+        const newTask: TaskType = {
+            id: v1(), title: title, isDone: false
+        }
+        setTasks([newTask, ...tasks])
+    }
 
     //UI
-    return (
-        <div className="App">
-            <ToDoList title={toDoListTitle} tasks={tasksForTodolist} removeTask={removeTask} changeFilter={changeFilter}/>
-        </div>
-    );
-}
+    const getTusksForTodolist = () => {
+        switch (filter) {
+            case 'active':
+                return tasks.filter(t => !t.isDone)
+            case 'completed':
+                return tasks.filter(t => t.isDone)
+            default:
+                return tasks
+        }
+    }
 
-export default App;
+        return (
+            <div className="App">
+                <ToDoList title={toDoListTitle} tasks={getTusksForTodolist()} removeTask={removeTask}
+                          changeFilter={changeFilter} addTask={addTask}/>
+            </div>
+        );
+    }
+
+    export default App;
