@@ -30,13 +30,14 @@ function App() {
     }
 
     const addTask = (title: string) => {
-        const newTask: TaskType = {
-            id: v1(), title: title, isDone: false
-        }
+        const newTask: TaskType = {id: v1(), title, isDone: false}
         setTasks([newTask, ...tasks])
     }
 
-    //UI
+    const changeStatus = (taskID: string, isDone: boolean) => {
+        setTasks(tasks.map(t => t.id !== taskID ? t : {...t, isDone}))
+    }
+
     const getTusksForTodolist = () => {
         switch (filter) {
             case 'active':
@@ -48,10 +49,13 @@ function App() {
         }
     }
 
+    //UI
+
+
         return (
             <div className="App">
-                <ToDoList title={toDoListTitle} tasks={getTusksForTodolist()} removeTask={removeTask}
-                          changeFilter={changeFilter} addTask={addTask}/>
+                <ToDoList title={toDoListTitle} tasks={getTusksForTodolist()} removeTask={removeTask} filter={filter}
+                          changeFilter={changeFilter} addTask={addTask} changeStatus={changeStatus}/>
             </div>
         );
     }
