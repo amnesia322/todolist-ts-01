@@ -7,13 +7,15 @@ export type TaskType = {
     isDone: boolean
 }
 type ToDoListPropsType = {
+    toDoListID: string
     title: string
     tasks: Array<TaskType>
-    removeTask: (taskID: string) => void
+    removeTask: (taskID: string, toDoListID: string) => void
+    removeToDoList: (toDoListID: string)=>void
     filter: FilterType
-    changeFilter: (filter: FilterType) => void
-    addTask: (title: string) => void
-    changeStatus: (taskID: string, isDone: boolean) => void
+    changeFilter: (filter: FilterType, toDoListID: string) => void
+    addTask: (title: string, toDoListID: string) => void
+    changeStatus: (taskID: string, isDone: boolean, toDoListID: string) => void
 }
 
 const ToDoList = (props: ToDoListPropsType) => {
@@ -25,10 +27,10 @@ const ToDoList = (props: ToDoListPropsType) => {
             return (
                 <li key={t.id} className={t.isDone ? "isDone" : ""}>
                     <input type="checkbox" checked={t.isDone}
-                           onChange={(e) => props.changeStatus(t.id, e.currentTarget.checked)}/>
+                           onChange={(e) => props.changeStatus(t.id, e.currentTarget.checked, props.toDoListID)}/>
                     <span>{t.title}</span>
                     <button onClick={() => {
-                        props.removeTask(t.id)
+                        props.removeTask(t.id, props.toDoListID)
                     }}>x
                     </button>
                 </li>
@@ -41,36 +43,40 @@ const ToDoList = (props: ToDoListPropsType) => {
         if (error) setError(false)
         setTitle(e.currentTarget.value)
     }
-    const onKeyDownAddTask = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") onClickHandler()
-    }
-    const onClickHandler = () => {
+    const onClickAddTaskHandler = () => {
         const trimmedTitle = title.trim()
         if (trimmedTitle) {
-            props.addTask(trimmedTitle)
+            props.addTask(trimmedTitle, props.toDoListID)
         } else {
             setError(true)
         }
         setTitle('')
     }
-    const handlerCreator = (filter: FilterType) => {
+    const onKeyDownAddTask = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") onClickAddTaskHandler()
+    }
+    const onClickRemoveToDoListHandler = (toDoListID: string) => {
+        props.removeToDoList(toDoListID)
+    }
+    const handlerCreator = (filter: FilterType, toDoListID: string) => {
         return () => {
-            props.changeFilter(filter)
+            props.changeFilter(filter, toDoListID)
         }
     }
-    const userMessage =
-        error
-            ? <div style={{color: "hotpink"}}>Title is required!</div>
-            : <div style={{opacity: 0.6}}>Please, create title</div>
+    const onBlurInputHandler = () => title.trim() === '' ? setError(true) : setError(false)
+    const userMessage = error
+        ? <div style={{color: "hotpink"}}>Title is required!</div>
+        : <div style={{opacity: 0.6}}>Please, create title</div>
 
     return (
         <div>
-            <h3>{props.title}</h3>
+            <h3>{props.title} <button onClick={()=> onClickRemoveToDoListHandler(props.toDoListID)}>x</button></h3>
             <div>
                 <input className={error ? 'error' : ''} value={title}
                        onChange={onChangeHandler}
-                       onKeyDown={onKeyDownAddTask}/>
-                <button onClick={onClickHandler}>+</button>
+                       onKeyDown={onKeyDownAddTask}
+                       onBlur={onBlurInputHandler}/>
+                <button onClick={onClickAddTaskHandler}>+</button>
                 {userMessage}
             </div>
             <ul>
@@ -78,13 +84,13 @@ const ToDoList = (props: ToDoListPropsType) => {
             </ul>
             <div>
                 <button className={props.filter === 'all' ? 'btn-active btn' : 'btn'}
-                        onClick={handlerCreator("all")}>All
+                        onClick={handlerCreator("all", props.toDoListID)}>All
                 </button>
                 <button className={props.filter === 'active' ? 'btn-active btn' : 'btn'}
-                        onClick={handlerCreator("active")}>Active
+                        onClick={handlerCreator("active", props.toDoListID)}>Active
                 </button>
                 <button className={props.filter === 'completed' ? 'btn-active btn' : 'btn'}
-                        onClick={handlerCreator("completed")}>Completed
+                        onClick={handlerCreator("completed", props.toDoListID)}>Completed
                 </button>
             </div>
         </div>
