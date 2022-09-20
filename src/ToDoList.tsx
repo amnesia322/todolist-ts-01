@@ -1,5 +1,6 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React from 'react';
 import {FilterType} from "./App";
+import Input from "./components/Input";
 
 export type TaskType = {
     id: string
@@ -11,7 +12,7 @@ type ToDoListPropsType = {
     title: string
     tasks: Array<TaskType>
     removeTask: (taskID: string, toDoListID: string) => void
-    removeToDoList: (toDoListID: string)=>void
+    removeToDoList: (toDoListID: string) => void
     filter: FilterType
     changeFilter: (filter: FilterType, toDoListID: string) => void
     addTask: (title: string, toDoListID: string) => void
@@ -20,8 +21,7 @@ type ToDoListPropsType = {
 
 const ToDoList = (props: ToDoListPropsType) => {
 
-    const [title, setTitle] = useState<string>('')
-    const [error, setError] = useState<boolean>(false)
+
     const taskItem = props.tasks.length
         ? props.tasks.map(t => {
             return (
@@ -39,22 +39,7 @@ const ToDoList = (props: ToDoListPropsType) => {
         })
         : <span>Tasks list is empty</span>
 
-    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        if (error) setError(false)
-        setTitle(e.currentTarget.value)
-    }
-    const onClickAddTaskHandler = () => {
-        const trimmedTitle = title.trim()
-        if (trimmedTitle) {
-            props.addTask(trimmedTitle, props.toDoListID)
-        } else {
-            setError(true)
-        }
-        setTitle('')
-    }
-    const onKeyDownAddTask = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") onClickAddTaskHandler()
-    }
+
     const onClickRemoveToDoListHandler = (toDoListID: string) => {
         props.removeToDoList(toDoListID)
     }
@@ -63,22 +48,16 @@ const ToDoList = (props: ToDoListPropsType) => {
             props.changeFilter(filter, toDoListID)
         }
     }
-    const onBlurInputHandler = () => title.trim() === '' ? setError(true) : setError(false)
-    const userMessage = error
-        ? <div style={{color: "hotpink"}}>Title is required!</div>
-        : <div style={{opacity: 0.6}}>Please, create title</div>
+    const addTaskHandler = (newTitle: string) => {
+        props.addTask(newTitle, props.toDoListID)
+    }
 
     return (
         <div>
-            <h3>{props.title} <button onClick={()=> onClickRemoveToDoListHandler(props.toDoListID)}>x</button></h3>
-            <div>
-                <input className={error ? 'error' : ''} value={title}
-                       onChange={onChangeHandler}
-                       onKeyDown={onKeyDownAddTask}
-                       onBlur={onBlurInputHandler}/>
-                <button onClick={onClickAddTaskHandler}>+</button>
-                {userMessage}
-            </div>
+            <h3>{props.title}
+                <button onClick={() => onClickRemoveToDoListHandler(props.toDoListID)}>x</button>
+            </h3>
+            <Input callBack={addTaskHandler}/>
             <ul>
                 {taskItem}
             </ul>
@@ -94,7 +73,8 @@ const ToDoList = (props: ToDoListPropsType) => {
                 </button>
             </div>
         </div>
-    );
+    )
+        ;
 };
 
 export default ToDoList;

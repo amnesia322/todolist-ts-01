@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import ToDoList, {TaskType} from "./ToDoList";
 import {v1} from "uuid";
+import Input from "./components/Input";
 
 export type FilterType = "all" | "active" | "completed";
 type ToDoListsType = {
@@ -22,7 +23,6 @@ function App() {
         {id: todolistID1, title: 'What to learn', filter: 'all'},
         {id: todolistID2, title: 'What to buy', filter: 'all'},
     ])
-
     let [tasks, setTasks] = useState<TasksStateType>({
         [todolistID1]: [
             {id: v1(), title: "HTML&CSS", isDone: true},
@@ -39,25 +39,22 @@ function App() {
             {id: v1(), title: "GraphQL2", isDone: false},
         ]
     });
+
     const removeToDoList = (toDoListID: string) => {
         setToDoLists(toDoLists.filter(t => t.id !== toDoListID))
         delete tasks[toDoListID]
         setTasks({...tasks})
     }
-
     const changeFilter = (filter: FilterType, toDoListID: string) => {
         setToDoLists(toDoLists.map(el => el.id === toDoListID ? {...el, filter: filter} : el))
     }
-
     const removeTask = (taskID: string, toDoListID: string) => {
     setTasks({...tasks, [toDoListID]: tasks[toDoListID].filter(fl => fl.id !== taskID)})
     }
-
     const addTask = (title: string, toDoListID: string) => {
         const newTask: TaskType = {id: v1(), title, isDone: false}
         setTasks({...tasks, [toDoListID]: [newTask, ...tasks[toDoListID]]})
     }
-
     const changeStatus = (taskID: string, isDone: boolean, toDoListID: string) => {
         /*setTasks(tasks.map(t => t.id !== taskID ? t : {...t, isDone}))*/
         setTasks({...tasks, [toDoListID]: tasks[toDoListID].map( t => t.id !== taskID ? t : {...t, isDone})})
@@ -67,6 +64,7 @@ function App() {
     //UI
     return (
         <div className="App">
+            <Input callBack={()=>{}}/>
             {toDoLists.map(el => {
                 const getTasksForTodolist = () => {
                     switch (el.filter) {
