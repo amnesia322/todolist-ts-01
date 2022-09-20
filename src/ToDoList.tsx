@@ -1,6 +1,7 @@
 import React from 'react';
 import {FilterType} from "./App";
 import Input from "./components/Input";
+import EditableSpan from "./components/EditableSpan";
 
 export type TaskType = {
     id: string
@@ -17,28 +18,10 @@ type ToDoListPropsType = {
     changeFilter: (filter: FilterType, toDoListID: string) => void
     addTask: (title: string, toDoListID: string) => void
     changeStatus: (taskID: string, isDone: boolean, toDoListID: string) => void
+    changeTask: (toDoListID: string, taskID: string, currentTitle: string) => void
 }
 
 const ToDoList = (props: ToDoListPropsType) => {
-
-
-    const taskItem = props.tasks.length
-        ? props.tasks.map(t => {
-            return (
-                <li key={t.id} className={t.isDone ? "isDone" : ""}>
-                    <input type="checkbox" checked={t.isDone}
-                           onChange={(e) => props.changeStatus(t.id, e.currentTarget.checked, props.toDoListID)}/>
-                    <span>{t.title}</span>
-                    <button onClick={() => {
-                        props.removeTask(t.id, props.toDoListID)
-                    }}>x
-                    </button>
-                </li>
-
-            )
-        })
-        : <span>Tasks list is empty</span>
-
 
     const onClickRemoveToDoListHandler = (toDoListID: string) => {
         props.removeToDoList(toDoListID)
@@ -51,6 +34,29 @@ const ToDoList = (props: ToDoListPropsType) => {
     const addTaskHandler = (newTitle: string) => {
         props.addTask(newTitle, props.toDoListID)
     }
+
+
+    const taskItem = props.tasks.length
+        ? props.tasks.map(t => {
+            const changeTaskHandler = (currentTitle: string) => {
+                props.changeTask(props.toDoListID, t.id, currentTitle)
+            }
+
+            return (
+                <li key={t.id} className={t.isDone ? "isDone" : ""}>
+                    <input type="checkbox" checked={t.isDone}
+                           onChange={(e) => props.changeStatus(t.id, e.currentTarget.checked, props.toDoListID)}/>
+                    <EditableSpan title={t.title} callBack={changeTaskHandler}/>
+                    <button onClick={() => {
+                        props.removeTask(t.id, props.toDoListID)
+                    }}>x
+                    </button>
+                </li>
+
+            )
+        })
+        : <span>Tasks list is empty</span>
+
 
     return (
         <div>

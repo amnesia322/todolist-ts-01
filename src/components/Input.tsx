@@ -12,7 +12,7 @@ const Input = (props: InputType) => {
         if (error) setError(false)
         setTitle(e.currentTarget.value)
     }
-    const onClickAddTaskHandler = () => {
+    const addTask = () => {
         const newTitle = title.trim()
         if (newTitle) {
             props.callBack(newTitle)
@@ -22,7 +22,7 @@ const Input = (props: InputType) => {
         setTitle('')
     }
     const onKeyDownAddTask = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") onClickAddTaskHandler()
+        if (e.key === "Enter") addTask()
     }
 
     const onBlurInputHandler = () => title.trim() === '' ? setError(true) : setError(false)
@@ -36,7 +36,7 @@ const Input = (props: InputType) => {
                    onChange={onChangeHandler}
                    onKeyDown={onKeyDownAddTask}
                    onBlur={onBlurInputHandler}/>
-            <button onClick={onClickAddTaskHandler}>+</button>
+            <button onClick={addTask}>+</button>
             {userMessage}
         </div>
     );

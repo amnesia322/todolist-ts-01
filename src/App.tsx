@@ -11,7 +11,7 @@ type ToDoListsType = {
     filter: FilterType
 }
 export type TasksStateType = {
-[key: string]: Array<TaskType>
+    [key: string]: Array<TaskType>
 }
 
 function App() {
@@ -49,7 +49,7 @@ function App() {
         setToDoLists(toDoLists.map(el => el.id === toDoListID ? {...el, filter: filter} : el))
     }
     const removeTask = (taskID: string, toDoListID: string) => {
-    setTasks({...tasks, [toDoListID]: tasks[toDoListID].filter(fl => fl.id !== taskID)})
+        setTasks({...tasks, [toDoListID]: tasks[toDoListID].filter(fl => fl.id !== taskID)})
     }
     const addTask = (title: string, toDoListID: string) => {
         const newTask: TaskType = {id: v1(), title, isDone: false}
@@ -57,13 +57,19 @@ function App() {
     }
     const addToDoList = (newTitle: string) => {
         const newToDoListID = v1()
-        const newToDoList:ToDoListsType = {id: newToDoListID, title: newTitle, filter: 'all'}
+        const newToDoList: ToDoListsType = {id: newToDoListID, title: newTitle, filter: 'all'}
         setToDoLists([newToDoList, ...toDoLists])
         setTasks({...tasks, [newToDoListID]: []})
     }
     const changeStatus = (taskID: string, isDone: boolean, toDoListID: string) => {
         /*setTasks(tasks.map(t => t.id !== taskID ? t : {...t, isDone}))*/
-        setTasks({...tasks, [toDoListID]: tasks[toDoListID].map( t => t.id !== taskID ? t : {...t, isDone})})
+        setTasks({...tasks, [toDoListID]: tasks[toDoListID].map(t => t.id !== taskID ? t : {...t, isDone})})
+    }
+    const changeTask = (toDoListID: string, taskID: string, currentTitle: string) => {
+        setTasks({
+            ...tasks,
+            [toDoListID]: tasks[toDoListID].map(t => t.id === taskID ? {...t, title: currentTitle} : t)
+        })
     }
 
 
@@ -85,10 +91,16 @@ function App() {
 
                 return (
                     <ToDoList key={el.id} toDoListID={el.id}
-                              title={el.title} tasks={getTasksForTodolist()}
-                              removeTask={removeTask} removeToDoList={removeToDoList} filter={el.filter}
-                              changeFilter={changeFilter} addTask={addTask}
-                              changeStatus={changeStatus}/>
+                              title={el.title}
+                              tasks={getTasksForTodolist()}
+                              removeTask={removeTask}
+                              removeToDoList={removeToDoList}
+                              filter={el.filter}
+                              changeFilter={changeFilter}
+                              addTask={addTask}
+                              changeStatus={changeStatus}
+                              changeTask={changeTask}
+                    />
                 )
             })}
 
