@@ -55,6 +55,12 @@ function App() {
         const newTask: TaskType = {id: v1(), title, isDone: false}
         setTasks({...tasks, [toDoListID]: [newTask, ...tasks[toDoListID]]})
     }
+    const addToDoList = (newTitle: string) => {
+        const newToDoListID = v1()
+        const newToDoList:ToDoListsType = {id: newToDoListID, title: newTitle, filter: 'all'}
+        setToDoLists([newToDoList, ...toDoLists])
+        setTasks({...tasks, [newToDoListID]: []})
+    }
     const changeStatus = (taskID: string, isDone: boolean, toDoListID: string) => {
         /*setTasks(tasks.map(t => t.id !== taskID ? t : {...t, isDone}))*/
         setTasks({...tasks, [toDoListID]: tasks[toDoListID].map( t => t.id !== taskID ? t : {...t, isDone})})
@@ -64,7 +70,7 @@ function App() {
     //UI
     return (
         <div className="App">
-            <Input callBack={()=>{}}/>
+            <Input callBack={addToDoList}/>
             {toDoLists.map(el => {
                 const getTasksForTodolist = () => {
                     switch (el.filter) {
