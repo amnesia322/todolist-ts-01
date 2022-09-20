@@ -19,6 +19,7 @@ type ToDoListPropsType = {
     addTask: (title: string, toDoListID: string) => void
     changeStatus: (taskID: string, isDone: boolean, toDoListID: string) => void
     changeTask: (toDoListID: string, taskID: string, currentTitle: string) => void
+    editToDoList: (toDoListID: string, currentTitle: string) => void
 }
 
 const ToDoList = (props: ToDoListPropsType) => {
@@ -33,6 +34,9 @@ const ToDoList = (props: ToDoListPropsType) => {
     }
     const addTaskHandler = (newTitle: string) => {
         props.addTask(newTitle, props.toDoListID)
+    }
+    const editToDoListHandler = (currentTitle: string) => {
+        props.editToDoList(props.toDoListID, currentTitle)
     }
 
 
@@ -60,7 +64,7 @@ const ToDoList = (props: ToDoListPropsType) => {
 
     return (
         <div>
-            <h3>{props.title}
+            <h3><EditableSpan title={props.title} callBack={editToDoListHandler}/>
                 <button onClick={() => onClickRemoveToDoListHandler(props.toDoListID)}>x</button>
             </h3>
             <Input callBack={addTaskHandler}/>

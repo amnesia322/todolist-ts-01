@@ -71,6 +71,9 @@ function App() {
             [toDoListID]: tasks[toDoListID].map(t => t.id === taskID ? {...t, title: currentTitle} : t)
         })
     }
+    const editToDoList = (toDoListID: string, currentTitle: string) => {
+        setToDoLists(toDoLists.map(t => t.id === toDoListID ? {...t, title: currentTitle} : t))
+    }
 
 
     //UI
@@ -100,6 +103,7 @@ function App() {
                               addTask={addTask}
                               changeStatus={changeStatus}
                               changeTask={changeTask}
+                              editToDoList={editToDoList}
                     />
                 )
             })}
