@@ -2,7 +2,8 @@ import React, {ChangeEvent, useState} from 'react';
 
 type EditableSpanProps = {
     title: string
-    callBack: (currentTitle: string) => void
+    callBack: (taskID: string, currentTitle: string) => void
+    id: string
 }
 
 const EditableSpan = (props: EditableSpanProps) => {
@@ -17,12 +18,12 @@ const EditableSpan = (props: EditableSpanProps) => {
     }
     const changeTask = () => {
         const newTitle = currentTitle.trim()
-            props.callBack(newTitle)
+        props.callBack(props.id, newTitle)
     }
     return (
         edit
-        ? <input value={currentTitle} onBlur={changeEdit} onChange={onChangeHandler} autoFocus/>
-        : <span onDoubleClick={changeEdit}>{props.title}</span>
+            ? <input value={currentTitle} onBlur={changeEdit} onChange={onChangeHandler} autoFocus/>
+            : <span onDoubleClick={changeEdit}>{props.title}</span>
     );
 };
 

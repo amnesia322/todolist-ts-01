@@ -1,4 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import {Button, TextField} from "@mui/material";
+
 
 type InputType = {
     callBack: (newTitle: string) => void
@@ -26,18 +28,22 @@ const Input = (props: InputType) => {
     }
 
     const onBlurInputHandler = () => title.trim() === '' ? setError(true) : setError(false)
-    const userMessage = error
-        ? <div style={{color: "hotpink"}}>Title is required!</div>
-        : <div style={{opacity: 0.6}}>Please, create title</div>
 
     return (
         <div>
-            <input className={error ? 'error' : ''} value={title}
-                   onChange={onChangeHandler}
-                   onKeyDown={onKeyDownAddTask}
-                   onBlur={onBlurInputHandler}/>
-            <button onClick={addTask}>+</button>
-            {userMessage}
+            <TextField
+                error={error}
+                id="outlined-basic"
+                label={error ? "Title is required" : "Please, create title"}
+                variant="outlined"
+                value={title}
+                size={'small'}
+                onChange={onChangeHandler}
+                onKeyDown={onKeyDownAddTask}
+                onBlur={onBlurInputHandler}/>
+            <Button variant="contained"
+                    style={{maxWidth: '38px', maxHeight: '38px', minWidth: '38px', minHeight: '38px'}}
+                    onClick={addTask}>+</Button>
         </div>
     );
 };
