@@ -7,7 +7,7 @@ import ButtonAppBar from "./components/ButtonAppBar";
 import {Container, Grid, Paper} from "@mui/material";
 
 export type FilterType = "all" | "active" | "completed";
-type ToDoListsType = {
+export type ToDoListsType = {
     id: string
     title: string
     filter: FilterType
