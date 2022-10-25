@@ -3,8 +3,8 @@ import {v1} from "uuid";
 
 type ActionsType = removeToDoListACType | addToDoListACType | changeToDoListACType | changeToDoListFilterACType
 
-type removeToDoListACType = ReturnType<typeof removeToDoListAC>
-type addToDoListACType = ReturnType<typeof addToDoListAC>
+export type removeToDoListACType = ReturnType<typeof removeToDoListAC>
+export type addToDoListACType = ReturnType<typeof addToDoListAC>
 type changeToDoListACType = ReturnType<typeof changeToDoListTitleAC>
 type changeToDoListFilterACType = ReturnType<typeof changeToDoListFilterAC>
 
@@ -37,7 +37,8 @@ export const addToDoListAC = (title: string) => {
     return {
         type: 'ADD-TODOLIST',
         payload: {
-            title: title
+            title: title,
+            id: v1()
         }
     } as const
 }
