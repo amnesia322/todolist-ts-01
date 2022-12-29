@@ -25,8 +25,7 @@ export const TodolistsList: React.FC = () => {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        const thunk = fetchTodolistsTC()
-        dispatch(thunk)
+        isLoggedIn && dispatch(fetchTodolistsTC())
     }, [])
 
     const removeTask = useCallback(function (id: string, todolistId: string) {
@@ -70,7 +69,7 @@ export const TodolistsList: React.FC = () => {
     }, [dispatch])
 
     if (!isLoggedIn) {
-       return <Navigate  to={'/login'} />
+        return <Navigate to={'/login'}/>
     }
 
     return <>
