@@ -25,13 +25,14 @@ export const Login = () => {
             }
             if (!values.password) {
                 errors.password = 'Required'
-            }else if (values.password.length < 3) {
+            } else if (values.password.length < 3) {
                 errors.password = 'Field should be more 3 symbols'
             }
             return errors
         },
         onSubmit: values => {
             alert(JSON.stringify(values, null, 2));
+            formik.resetForm();
         },
     });
 
@@ -49,27 +50,26 @@ export const Login = () => {
                     <p>Password: free</p>
                 </FormLabel>
                 <form onSubmit={formik.handleSubmit}>
-                <FormGroup>
-
-                    <TextField type='email' label="Email" margin="normal" name="email"
-                               onChange={formik.handleChange}
-                               value={formik.values.email}/>
-                    {formik.errors.email && <div style={{color: "red"}}>{formik.errors.email}</div>}
-                    <TextField type="password" label="Password"
-                               margin="normal" name="password"
-                               onChange={formik.handleChange}
-                               value={formik.values.password}
-                    />
-                    {formik.errors.password && <div style={{color: "red"}}>{formik.errors.password}</div>}
-                    <FormControlLabel label={'Remember me'} control={<Checkbox name="rememberMe"
-                                                                               onChange={formik.handleChange}
-                                                                               value={formik.values.password}/>}/>
-                    <Button type={'submit'} variant={'contained'} color={'primary'}>
-                        Login
-                    </Button>
-
-                </FormGroup>
-            </form>
+                    <FormGroup>
+                        <TextField type='email' label="Email" margin="normal"
+                                   {...formik.getFieldProps('email')}
+                        />
+                        {formik.touched.email && formik.errors.email &&
+                            <div style={{color: "red"}}>{formik.errors.email}</div>}
+                        <TextField type="password" label="Password"
+                                   margin="normal"
+                                   {...formik.getFieldProps('password')}
+                        />
+                        {formik.touched.password && formik.errors.password &&
+                            <div style={{color: "red"}}>{formik.errors.password}</div>}
+                        <FormControlLabel label={'Remember me'} control={<Checkbox
+                            {...formik.getFieldProps('rememberMe')}
+                        checked={formik.values.rememberMe}/>}/>
+                        <Button type={'submit'} variant={'contained'} color={'primary'}>
+                            Login
+                        </Button>
+                    </FormGroup>
+                </form>
             </FormControl>
         </Grid>
     </Grid>
